@@ -16,8 +16,8 @@ class Solution(object):
         # print(dp)
         return dp[length]
 
-# string = "leetcode"
-# wordDict = ["leet", "code"]
+# string = "catsanddog"
+# wordDict = ["cat", "cats", "and", "sand", "dog"]
 # s = Solution()
 # res = s.wordBreak(string, wordDict)
 # print(res)
