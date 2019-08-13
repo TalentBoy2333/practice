@@ -1,3 +1,4 @@
+from collections import defaultdict
 class Solution(object):
     def ladderLength(self, beginWord, endWord, wordList):
         """
@@ -8,42 +9,42 @@ class Solution(object):
         """
         if endWord not in wordList:
             return 0
-        h = [0 for _ in range(len(wordList))]
-        curWord = beginWord
-        self.res = 0
-        self.bfs(curWord, endWord, wordList, h, 0)
-        return self.res
-
-    def bfs(self, curWord, endWord, wordList, h, cur):
-        for i in range(len(h)):
-            if h[i] == 0:
-                h[i] = 1
-                if self.judge(curWord, wordList[i]):
-                    if wordList[i] == endWord:
-                        # print(wordList[i])
-                        if self.res == 0:
-                            self.res = cur + 1
-                        elif self.res > cur + 1:
-                            self.res = cur + 1
-                    else:
-                        # print(wordList[i])
-                        self.bfs(wordList[i], endWord, wordList, h, cur+1)
-
+        length = len(beginWord)
+        d = self.judge(beginWord, wordList)
+        q = [(beginWord, 1)]
+        visited = []
+        while q != []:
+            # print(q)
+            curWord, level = q.pop(0)
+            for i in range(length):
+                temp = curWord[:i] + '*' + curWord[i+1:]
+                for w in d[temp]:
+                    if w == endWord:
+                        return level + 1
+                    if w not in visited:
+                        visited.append(w)
+                        q.append((w, level+1))
+                d[temp] = []
+        return 0
         
-    def judge(self, w1, w2):
-        diff = 0
-        for i in range(len(w1)):
-            if w1[i] != w2[i]:
-                diff += 1
-        if diff <= 1:
-            return True 
-        else:
-            return False
+    def judge(self, beginWord, wordList):
+        d = defaultdict(list)
+        l = [beginWord] + wordList
+        length = len(beginWord)
+        for word in l:
+            for i in range(length):
+                temp = word[:i] + '*' + word[i+1:]
+                d[temp].append(word)
+        return d
 
-if __name__ == '__main__':
-    beginWord = 'a'
-    endWord = 'c'
-    wordList = ["a","b","c"]
-    so = Solution()
-    res = so.ladderLength(beginWord, endWord, wordList)
-    print(res)
+
+# if __name__ == '__main__':
+#     beginWord = 'hit'
+#     endWord = 'cog'
+#     wordList = ["hot","dot","dog","lot","log","cog"]
+#     # beginWord = "hot"
+#     # endWord = "dog"
+#     # wordList = ["hot","dog","cog","pot","dot"]
+#     so = Solution()
+#     res = so.ladderLength(beginWord, endWord, wordList)
+#     print(res)
